@@ -13,13 +13,13 @@ RUN apt-get update && \
 
 # Install libpng12-0
 COPY \
-    libpng12-0_1.2.54-1ubuntu1.1_amd64.deb ./ \
+    wget -qq http://launchpadlibrarian.net/377985746/libpng12-0_1.2.54-1ubuntu1.1_amd64.deb \
     && dpkg -i libpng12-0_1.2.54-1ubuntu1.1_amd64.deb \
     rm libpng12*
 
 # Install Oracle java 8
 RUN \
-    wget https://download.java.net/java/GA/jdk12.0.2/e482c34c86bd4bf8b56c0b35558996b9/10/GPL/openjdk-12.0.2_linux-x64_bin.tar.gz \
+    wget -qq https://download.java.net/java/GA/jdk12.0.2/e482c34c86bd4bf8b56c0b35558996b9/10/GPL/openjdk-12.0.2_linux-x64_bin.tar.gz \
     && mkdir /usr/java \
     && cp openjdk-12*.tar.gz /usr/java/ \
     && rm openjdk-12*.tar.gz \
@@ -82,7 +82,7 @@ WORKDIR ${HOME}
 ENV SDK_URL="http://download.tizen.org/sdk/Installer/tizen-studio_3.7/web-cli_Tizen_Studio_3.7_ubuntu-64.bin" \
     INSTALL_PATH="${HOME}/tizen-studio"
 RUN export DISPLAY=:0 \
-    && wget -q ${SDK_URL} \
+    && wget -qq ${SDK_URL} \
     && chmod +x ./web-cli_Tizen_Studio*.bin \
     && ./web-cli_Tizen_Studio_*.bin --accept-license ${INSTALL_PATH} \
     && rm -rf ./web-cli_Tizen_Studio_*.bin
