@@ -11,10 +11,6 @@ RUN apt-get update && \
     libxcb-render-util0 libxcb-shape0 libxcb-xfixes0 libxi6 \
     libpython2.7
 
-# Python alias
-RUN echo "alias python=python2.7" >> /home/build/.bash_aliases
-RUN ln -s /usr/bin/python2.7 /usr/bin/python
-
 # Install libpng12-0
 COPY \
     libpng12-0_1.2.54-1ubuntu1.1_amd64.deb ./ \
@@ -74,6 +70,10 @@ RUN \
     && useradd -d "$HOME" -u ${uid} -g ${gid} -m -s /bin/bash ${user} \
     &&usermod -aG sudo ${user} \
     && mkdir /share
+
+# Python alias
+RUN echo "alias python=python2.7" >> ${HOME}.bash_aliases
+RUN ln -s /usr/bin/python2.7 /usr/bin/python
 
 USER ${user}
 WORKDIR ${HOME}
