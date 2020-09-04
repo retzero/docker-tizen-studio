@@ -1,61 +1,25 @@
 FROM ubuntu:18.04
 
+RUN cp /etc/profile /root/.profile
+
 # Install Tizen Studio specific packages
-RUN \
-    apt-get update \
-    && apt-get install -y \
-    wget \
-    curl \
-    zip \
-    apt-utils \
-    software-properties-common \
-    python2.7 \
-    libpython2.7 \
-    gnome-keyring \
-    ca-certificates \
-    locales \
-    build-essential \
-    pciutils \
-    gettext \
-    git \
-    acl \
-    openvpn \
-    ruby-full \
-    rpm2cpio \
-    bridge-utils \
-    xdg-utils \
-    xmlstarlet \
-    gtk2.0 \
-    zlib1g \
-    libwebkitgtk-1.0-0 \
-    libcurl3-gnutls \
-    libsdl1.2debian \
-    libpixman-1-0 \
-    libfontconfig1 \
-    libjpeg-turbo8 \
-    libpng12-0 \
-    libsm6 \
-    libv4l-0 \
-    libx11-xcb1 \
-    libxcb-icccm4 \
-    libxcb-image0 \
-    libxcb-randr0 \
-    libxcb-render-util0 \
-    libxcb-shape0 \
-    libxcb-xfixes0 \
-    libxi6 \
-    && rm -rf /var/lib/apt/lists/* \
-    && rm -rf /etc/apt/sources.list.d/*
+RUN apt-get update && \
+    apt-get install -y curl locales build-essential sudo git ruby-full gettext wget pciutils zip python2.7 \
+    libwebkitgtk-1.0-0 cpio rpm2cpio gnome-keyring \
+    acl bridge-utils openvpn libfontconfig1 libglib2.0-0 libjpeg-turbo8 libpixman-1-0 \
+    libsdl1.2debian libsm6 libv4l-0 libx11-xcb1 libxcb-icccm4 libxcb-image0 libxcb-randr0 \
+    libxcb-render-util0 libxcb-shape0 libxcb-xfixes0 libxi6 \
+    libpython2.7
+
+# Python alias
+RUN echo "alias python=python2.7" >> /home/build/.bash_aliases
+RUN ln -s /usr/bin/python2.7 /usr/bin/python
 
 # Install libpng12-0
 COPY \
     libpng12-0_1.2.54-1ubuntu1.1_amd64.deb ./ \
     && dpkg -i libpng12-0_1.2.54-1ubuntu1.1_amd64.deb \
     rm libpng12*
-
-# Python alias
-RUN echo "alias python=python2.7" >> /home/build/.bash_aliases
-RUN ln -s /usr/bin/python2.7 /usr/bin/python
 
 # Install Oracle java 8
 RUN \
