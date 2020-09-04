@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM ubuntu:18.04
 
 # Install Tizen Studio specific packages
 RUN \
@@ -48,34 +48,32 @@ RUN \
     && rm -rf /var/lib/apt/lists/* \
     && rm -rf /etc/apt/sources.list.d/*
 
+# Install libpng12-0
+COPY \
+    libpng12-0_1.2.54-1ubuntu1.1_amd64.deb ./ \
+    && dpkg -i libpng12-0_1.2.54-1ubuntu1.1_amd64.deb \
+    rm libpng12*
+
 # Python alias
-#RUN echo "alias python=python2.7" >> /home/build/.bash_aliases
-#RUN ln -s /usr/bin/python2.7 /usr/bin/python
+RUN echo "alias python=python2.7" >> /home/build/.bash_aliases
+RUN ln -s /usr/bin/python2.7 /usr/bin/python
 
 # Install Oracle java 8
 RUN \
-    echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" | tee /etc/apt/sources.list.d/webupd8team-java.list \
-    && echo "deb-src http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" | tee -a /etc/apt/sources.list.d/webupd8team-java.list \
-    && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys EEA14886 \
-    && apt-get update
-RUN \
-    echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections \
-    && echo debconf shared/accepted-oracle-license-v1-1 seen true | debconf-set-selections \
-    && DEBIAN_FRONTEND=noninteractive  apt-get install -y --force-yes oracle-java8-installer oracle-java8-set-default
-RUN \
-    rm -rf /var/cache/oracle-jdk8-installer \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
-ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
-
-# Install Java
-#RUN \
-#  echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | debconf-set-selections \
-#  && add-apt-repository -y ppa:webupd8team/java \
-#  && apt-get update \
-#  && apt-get install -y oracle-java8-installer \
-#  && rm -rf /var/lib/apt/lists/* \
-#  && rm -rf /var/cache/oracle-jdk8-installer
+    wget https://download.java.net/java/GA/jdk12.0.2/e482c34c86bd4bf8b56c0b35558996b9/10/GPL/openjdk-12.0.2_linux-x64_bin.tar.gz \
+    && mkdir /usr/java \
+    && cp openjdk-12*.tar.gz /usr/java/ \
+    && rm openjdk-12*.tar.gz \
+    && tar -xzf openjdk-12*.tar.gz /usr/java/ \
+    && update-alternatives --install "/usr/bin/java" "java" "/usr/java/jdk-12.0.1/bin/java" 1 \
+    && update-alternatives --install "/usr/bin/javac" "javac" "/usr/java/jdk-12.0.1/bin/javac" 1
+RUN echo $'JAVA_HOME=/usr/java/jdk-12.0.1 \n\
+PATH=$PATH:$HOME/bin:$JAVA_HOME/bin \n\
+export JAVA_HOME \n\
+export JRE_HOME \n\
+export PATH' >> /etc/profile
+ENV JAVA_HOME=/usr/java/jdk-12.0.2
+ENV PATH $PATH:$JAVA_HOME/bin
 
 # Setup timezone
 ENV TZ 'Asia/Seoul'
