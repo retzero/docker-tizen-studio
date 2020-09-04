@@ -49,8 +49,8 @@ RUN \
     && rm -rf /etc/apt/sources.list.d/*
 
 # Python alias
-RUN echo "alias python=python2.7" >> /home/build/.bash_aliases
-RUN ln -s /usr/bin/python2.7 /usr/bin/python
+#RUN echo "alias python=python2.7" >> /home/build/.bash_aliases
+#RUN ln -s /usr/bin/python2.7 /usr/bin/python
 
 # Install Oracle java 8
 #RUN \
