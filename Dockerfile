@@ -28,7 +28,6 @@ RUN \
     gtk2.0 \
     zlib1g \
     libwebkitgtk-1.0-0 \
-    libglib2.0-0 \
     libcurl3-gnutls \
     libsdl1.2debian \
     libpixman-1-0 \
