@@ -13,6 +13,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Set env
+        id: version_set
         run: |
           echo ::set-output name=STUDIO_VERSION::$(echo ${{ github.event.release.tag_name }} | cut -c 2- | cut -d'-' -f1)
           echo ::set-output name=TIZEN_VERSION::$(echo ${{ github.event.release.tag_name }} | cut -c 2- | cut -d'-' -f2)
@@ -24,4 +25,4 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD1 }}
           repository: retzero/tizen-studio
           tags: ${{ github.event.release.tag_name }}
-          build_args: STUDIO_VERSION=${STUDIO_VERSION},TIZEN_VERSION=${TIZEN_VERSION}
+          build_args: STUDIO_VERSION=${{ steps.version_set.outputs.STUDIO_VERSION }},TIZEN_VERSION=${{ steps.version_set.outputs.TIZEN_VERSION }}
