@@ -86,8 +86,8 @@ ENV \
     SDK_URL="http://download.tizen.org/sdk/Installer/tizen-studio_${STUDIO_VERSION}/web-cli_Tizen_Studio_${STUDIO_VERSION}_ubuntu-64.bin" \
     INSTALL_PATH="${HOME}/tizen-studio"
 RUN export DISPLAY=:0 \
-    && wget ${SDK_URL} \
-    chmod +x ./web-cli_Tizen_Studio*.bin \
+    && wget -qq ${SDK_URL} \
+    && chmod +x ./web-cli_Tizen_Studio*.bin \
     && ./web-cli_Tizen_Studio_*.bin --accept-license ${INSTALL_PATH} \
     && rm -rf ./web-cli_Tizen_Studio_*.bin
 
