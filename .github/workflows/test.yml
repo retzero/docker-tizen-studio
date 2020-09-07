@@ -1,4 +1,5 @@
-name: Build
+
+name: Commits
 on:
   push:
     branches:
@@ -6,21 +7,23 @@ on:
   pull_request:
 
 jobs:
-  build:
-    name: build
+  docker_build:
+    name: Build docker image
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Setup local registry on push
-        run: |
-          docker run -d -p 5000:5000 registry:2
-    
-      - name: Build Docker images for push
+      - name: Run local registry
+        run: docker run -d -p 5000:5000 registry:2
+
+      - name: Build and push Docker images for tags
         uses: docker/build-push-action@v1
         with:
           registry: localhost:5000
           repository: temp/workflow
+          tags: foo
           build_args: STUDIO_VERSION=3.7,TIZEN_VERSION=5.5
 
+      - name: Run image from registry
+        run: docker run --rm -i localhost:5000/temp/workflow:foo tizen version
