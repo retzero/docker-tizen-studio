@@ -3,8 +3,6 @@ on:
   push:
     branches:
       - '*'
-    tags:
-      - '*'
   pull_request:
 
 jobs:
@@ -15,10 +13,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Build and push Docker images
+      - name: Setup local registry on push
+        run: |
+          docker run -d -p 5000:5000 registry:2
+    
+      - name: Build Docker images for push
         uses: docker/build-push-action@v1
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-          repository: retzero/tizen-studio
-          tags: latest
+          registry: localhost:5000
+          repository: temp/workflow
+          tags: foo
+

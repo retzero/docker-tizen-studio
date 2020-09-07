@@ -1,0 +1,27 @@
+name: CI
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set env
+        id: vars
+        run: echo ::set-env name=RELEASE_VERSION::${GITHUB_REF#refs/*/}
+
+      - name: Build and push Docker images for tags
+        uses: docker/build-push-action@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          username: ${{ secrets.DOCKER_USERNAME1 }}
+          password: ${{ secrets.DOCKER_PASSWORD1 }}
+          repository: retzero/tizen-studio
+          tags: ${{ github.event.release.tag_name }}
+          build_args: release_tag=${{ RELEASE_VERSION }}

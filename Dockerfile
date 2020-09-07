@@ -1,5 +1,7 @@
 FROM ubuntu:18.04
 
+ARG release_tag_name
+
 RUN cp /etc/profile /root/.profile
 
 # Install Tizen Studio specific packages
@@ -79,7 +81,8 @@ USER ${user}
 WORKDIR ${HOME}
 
 # Install Tizen Studio
-ENV SDK_URL="http://download.tizen.org/sdk/Installer/tizen-studio_3.7/web-cli_Tizen_Studio_3.7_ubuntu-64.bin" \
+ENV \
+    SDK_URL="http://download.tizen.org/sdk/Installer/tizen-studio_3.7/web-cli_Tizen_Studio_3.7_ubuntu-64.bin" \
     INSTALL_PATH="${HOME}/tizen-studio"
 RUN export DISPLAY=:0 \
     && wget -qq ${SDK_URL} \
@@ -87,10 +90,27 @@ RUN export DISPLAY=:0 \
     && ./web-cli_Tizen_Studio_*.bin --accept-license ${INSTALL_PATH} \
     && rm -rf ./web-cli_Tizen_Studio_*.bin
 
-# Install sdk-build
+# Update Tizen Studio
+ENV \
+    REPOSITORY="http://download.tizen.org/sdk/tizenstudio" \
+    DISTRIBUTION="official" \
+    SNAPSHOT="Tizen_Studio_3.7"
 RUN \
-    git clone git://git.tizen.org/sdk/tools/sdk-build -b tizen
+    ${INSTALL_PATH}/package-manager/package-manager-cli.bin \
+    -r ${REPOSITORY} \
+    -d ${DISTRIBUTION} \
+    -s ${SNAPSHOT} \
+    install WebCLI NativeCLI \
+        NativeToolchain-Gcc-6.2 \
+        NativeToolchain-Gcc-9.2 \
+        MOBILE-${release_tag}-NativeAppDevelopment-CLI \
+        WEARABLE-${release_tag}-NativeAppDevelopment-CLI \
+    --remove-installed-sdk --accept-license
 
+# Install sdk-build and security signer
+RUN \
+    git clone git://git.tizen.org/sdk/tools/sdk-build -b tizen \
+    && git clone git://git.tizen.org/platform/core/security/hash-signer -b tizen
 
 # Set PATH
 ENV PATH $PATH:$INSTALL_PATH/tools/ide/bin/:$INSTALL_PATH/package-manager/:$HOME/sdk-build/
