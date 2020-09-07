@@ -12,7 +12,7 @@ RUN apt-get update && \
     libpython2.7
 
 # Install libpng12-0
-COPY \
+RUN \
     wget -qq http://launchpadlibrarian.net/377985746/libpng12-0_1.2.54-1ubuntu1.1_amd64.deb \
     && dpkg -i libpng12-0_1.2.54-1ubuntu1.1_amd64.deb \
     rm libpng12*
