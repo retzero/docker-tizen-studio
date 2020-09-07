@@ -4,12 +4,12 @@ RUN cp /etc/profile /root/.profile
 
 # Install Tizen Studio specific packages
 RUN apt-get update && \
-    apt-get install -y curl locales build-essential sudo git ruby-full gettext wget pciutils zip python2.7 \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y curl locales build-essential sudo git ruby-full gettext wget pciutils zip python2.7 \
     libwebkitgtk-1.0-0 cpio rpm2cpio gnome-keyring \
     acl bridge-utils openvpn libfontconfig1 libglib2.0-0 libjpeg-turbo8 libpixman-1-0 \
     libsdl1.2debian libsm6 libv4l-0 libx11-xcb1 libxcb-icccm4 libxcb-image0 libxcb-randr0 \
     libxcb-render-util0 libxcb-shape0 libxcb-xfixes0 libxi6 \
-    libpython2.7
+    libpython2.7 tzdata
 
 # Install libpng12-0
 RUN \
@@ -21,11 +21,12 @@ RUN \
 RUN \
     wget -qq https://download.java.net/java/GA/jdk12.0.2/e482c34c86bd4bf8b56c0b35558996b9/10/GPL/openjdk-12.0.2_linux-x64_bin.tar.gz \
     && mkdir -p /usr/java \
-    && tar -xzf ./openjdk-12*.tar.gz /usr/java/ \
+    && tar -xzf ./openjdk-12*.tar.gz -C /usr/java/ \
     && rm ./openjdk-12*.tar.gz || true \
-    && update-alternatives --install "/usr/bin/java" "java" "/usr/java/jdk-12.0.1/bin/java" 1 \
-    && update-alternatives --install "/usr/bin/javac" "javac" "/usr/java/jdk-12.0.1/bin/javac" 1
-RUN echo $'JAVA_HOME=/usr/java/jdk-12.0.1 \n\
+    && update-alternatives --install "/usr/bin/java" "java" "/usr/java/jdk-12.0.2/bin/java" 1 \
+    && update-alternatives --install "/usr/bin/javac" "javac" "/usr/java/jdk-12.0.2/bin/javac" 1
+
+RUN echo $'JAVA_HOME=/usr/java/jdk-12.0.2 \n\
 PATH=$PATH:$HOME/bin:$JAVA_HOME/bin \n\
 export JAVA_HOME \n\
 export JRE_HOME \n\
