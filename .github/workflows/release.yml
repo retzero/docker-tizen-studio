@@ -2,7 +2,7 @@ name: Release
 on:
   push:
     tags:
-      - '*'
+      - 'v[23]+.[0-9]+-[3-5].[05]-*'
 
 jobs:
   build:
@@ -12,18 +12,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set env
-        id: vars
-        run: |
-          TIZEN_VERSION=$(echo "${{ github.ref }}" | cut -d'-' -f2)
-          echo ::set-env name=TIZEN_VERSION::${TIZEN_VERSION}
-
       - name: Build and push Docker images for tags
         uses: docker/build-push-action@v1
-        if: startsWith(github.ref, 'refs/tags/')
         with:
           username: ${{ secrets.DOCKER_USERNAME1 }}
           password: ${{ secrets.DOCKER_PASSWORD1 }}
           repository: retzero/tizen-studio
           tags: ${{ github.event.release.tag_name }}
-          build_args: release_tag=${TIZEN_VERSION}
+          build_args: release_tag=${{ github.event.release.tag_name }}
