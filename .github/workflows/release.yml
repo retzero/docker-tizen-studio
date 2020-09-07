@@ -38,7 +38,15 @@ jobs:
           build_args: STUDIO_VERSION=${{ needs.prepare_env.outputs.studio_version }},TIZEN_VERSION=${{ needs.prepare_env.outputs.tizen_version }}
 
       - name: Run image from registry
-        run: docker run --rm -i localhost:5000/temp/workflow:foo cat ./tizen_version.txt
+        run: docker run --rm -i localhost:5000/temp/workflow:foo tizen version
+
+      - name: Build and push Docker images for tags
+        uses: docker/build-push-action@v1
+        with:
+          repository: retzero/tizen-studio
+          tags: latest
+          tag_with_ref:  true
+          build_args: STUDIO_VERSION=${{ needs.prepare_env.outputs.studio_version }},TIZEN_VERSION=${{ needs.prepare_env.outputs.tizen_version }}
 
 #      - name: Store intermediate docker image
 #        run: docker save -o workflow-foo.tar localhost:5000/temp/workflow:foo
