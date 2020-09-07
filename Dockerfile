@@ -14,8 +14,8 @@ RUN apt-get update && \
 # Install libpng12-0
 RUN \
     wget -qq http://launchpadlibrarian.net/377985746/libpng12-0_1.2.54-1ubuntu1.1_amd64.deb \
-    && dpkg -i libpng12-0_1.2.54-1ubuntu1.1_amd64.deb \
-    rm libpng12*
+    && dpkg -i libpng12-0*.deb \
+    && rm libpng12-0*.deb
 
 # Install Oracle java 8
 RUN \
