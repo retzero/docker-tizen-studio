@@ -25,4 +25,4 @@ jobs:
       - name: Run image from registry
         run: |
           k=$(docker run --rm -i temp/workflow:foo tizen version)
-          if [[ "${k%$'\r'}" != "Tizen CLI "* ]]; then exit 1; fi
+          if [[ "${k%$'\r'}" != "Tizen CLI Test "* ]]; then exit 1; fi
