@@ -11,12 +11,15 @@ jobs:
     outputs:
       studio_version: ${{ steps.version_envs.outputs.STUDIO_VERSION }}
       tizen_version: ${{ steps.version_envs.outputs.TIZEN_VERSION }}
+      wide_tag: ${{ steps.version_envs.outputs.WIDE_TAG }}
     steps:
       - name: Set env
         id: version_envs
         run: |
           echo ::set-output name=STUDIO_VERSION::$(echo ${GITHUB_REF##*/} | cut -c 2- | cut -d'-' -f1)
           echo ::set-output name=TIZEN_VERSION::$(echo ${GITHUB_REF##*/} | cut -c 2- | cut -d'-' -f2)
+          echo ::set-output name=WIDE_TAG::$(echo ${GITHUB_REF##*/} | cut -c 2- | awk -F'-' '{print $1"-"$2}')
+          
 
   docker_build:
     name: Build docker image
@@ -30,22 +33,22 @@ jobs:
         uses: docker/build-push-action@v1
         with:
           repository: retzero/tizen-studio
-          tags: foo
+          tags: latest,${{ needs.prepare_env.outputs.studio_version }}
           push: false
           build_args: STUDIO_VERSION=${{ needs.prepare_env.outputs.studio_version }},TIZEN_VERSION=${{ needs.prepare_env.outputs.tizen_version }}
 
       - name: Run image from registry
         run: |
-          k=$(docker run --rm -i retzero/tizen-studio:foo tizen version)
+          k=$(docker run --rm -i retzero/tizen-studio:3.7-5.0 tizen version)
           if [[ "${k%$'\r'}" != "Tizen CLI "* ]]; then exit 1; fi
 
       - name: Push docker image to docker hub
         uses: docker/build-push-action@v1
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          #username: ${{ secrets.DOCKER_USERNAME }}
+          #password: ${{ secrets.DOCKER_PASSWORD }}
           repository: retzero/tizen-studio
-          tags: latest
+          tags: latest,${{ needs.prepare_env.outputs.studio_version }}
           build_args: STUDIO_VERSION=${{ needs.prepare_env.outputs.studio_version }},TIZEN_VERSION=${{ needs.prepare_env.outputs.tizen_version }}
 
 #      - name: Store intermediate docker image
