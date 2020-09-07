@@ -22,5 +22,5 @@ jobs:
         with:
           registry: localhost:5000
           repository: temp/workflow
-          tags: foo
+          tags: v3.7-5.5-abcd
 

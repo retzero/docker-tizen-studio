@@ -2,8 +2,8 @@ FROM ubuntu:18.04
 
 ARG release_tag
 RUN \
-    export STUDIO_VERSION=$(echo ${release_tag:1} | cut -d'-' -f1) \
-    && export TIZEN_VERSION=$(echo ${release_tag:1} | cut -d'-' -f2)
+    export STUDIO_VERSION=$(echo "${release_tag}" | cut -c 2- | cut -d'-' -f1) \
+    && export TIZEN_VERSION=$(echo "${release_tag}" | cut -c 2- | cut -d'-' -f2)
 
 RUN cp /etc/profile /root/.profile
 
@@ -88,8 +88,9 @@ ENV \
     SDK_URL="http://download.tizen.org/sdk/Installer/tizen-studio_${STUDIO_VERSION}/web-cli_Tizen_Studio_${STUDIO_VERSION}_ubuntu-64.bin" \
     INSTALL_PATH="${HOME}/tizen-studio"
 RUN export DISPLAY=:0 \
-    && wget -qq ${SDK_URL} \
-    && chmod +x ./web-cli_Tizen_Studio*.bin \
+    && wget ${SDK_URL}
+RUN \
+    chmod +x ./web-cli_Tizen_Studio*.bin \
     && ./web-cli_Tizen_Studio_*.bin --accept-license ${INSTALL_PATH} \
     && rm -rf ./web-cli_Tizen_Studio_*.bin
 
@@ -118,4 +119,3 @@ RUN \
 # Set PATH
 ENV PATH $PATH:$INSTALL_PATH/tools/ide/bin/:$INSTALL_PATH/package-manager/:$HOME/sdk-build/
 
-CMD ["/bin/bash"]
