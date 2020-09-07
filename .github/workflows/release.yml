@@ -45,7 +45,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: retzero/tizen-studio
-          tags: latest,${GITHUB_REF##*/}
+          tags: latest
           build_args: STUDIO_VERSION=${{ needs.prepare_env.outputs.studio_version }},TIZEN_VERSION=${{ needs.prepare_env.outputs.tizen_version }}
 
 #      - name: Store intermediate docker image
