@@ -2,8 +2,8 @@ FROM ubuntu:18.04
 
 ARG release_tag
 RUN \
-    export STUDIO_VERSION=$(echo ${GITHUB_REF:1} | cut -d'-' -f1) \
-    && export TIZEN_VERSION=$(echo ${GITHUB_REF:1} | cut -d'-' -f2)
+    export STUDIO_VERSION=$(echo ${release_tag:1} | cut -d'-' -f1) \
+    && export TIZEN_VERSION=$(echo ${release_tag:1} | cut -d'-' -f2)
 
 RUN cp /etc/profile /root/.profile
 
