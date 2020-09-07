@@ -103,8 +103,8 @@ RUN \
     install WebCLI NativeCLI \
         NativeToolchain-Gcc-6.2 \
         NativeToolchain-Gcc-9.2 \
-        MOBILE-${release_tag}-NativeAppDevelopment-CLI \
-        WEARABLE-${release_tag}-NativeAppDevelopment-CLI \
+        MOBILE-${release_tag:-5.5}-NativeAppDevelopment-CLI \
+        WEARABLE-${release_tag:-5.5}-NativeAppDevelopment-CLI \
     --remove-installed-sdk --accept-license
 
 # Install sdk-build and security signer
