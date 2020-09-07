@@ -15,7 +15,7 @@ jobs:
       - name: Set env
         id: vars
         run: |
-          TIZEN_VERSION=$(echo ${GITHUB_REF} | cut -d'-' -f2)
+          TIZEN_VERSION=$(echo "${{ github.ref }}" | cut -d'-' -f2)
           echo ::set-env name=TIZEN_VERSION::${TIZEN_VERSION}
 
       - name: Build and push Docker images for tags
