@@ -1,9 +1,7 @@
 FROM ubuntu:18.04
 
-ARG release_tag
-RUN \
-    export STUDIO_VERSION=$(echo "${release_tag}" | cut -c 2- | cut -d'-' -f1) \
-    && export TIZEN_VERSION=$(echo "${release_tag}" | cut -c 2- | cut -d'-' -f2)
+ARG STUDIO_VERSION
+ARG TIZEN_VERSION 
 
 RUN cp /etc/profile /root/.profile
 

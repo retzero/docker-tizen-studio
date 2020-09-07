@@ -12,6 +12,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Set env
+        run: |
+          echo ::set-output name=STUDIO_VERSION::$(echo ${{ github.event.release.tag_name }} | cut -c 2- | cut -d'-' -f1)
+          echo ::set-output name=TIZEN_VERSION::$(echo ${{ github.event.release.tag_name }} | cut -c 2- | cut -d'-' -f2)
+
       - name: Build and push Docker images for tags
         uses: docker/build-push-action@v1
         with:
@@ -19,4 +24,4 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD1 }}
           repository: retzero/tizen-studio
           tags: ${{ github.event.release.tag_name }}
-          build_args: release_tag=${{ github.event.release.tag_name }}
+          build_args: STUDIO_VERSION=${STUDIO_VERSION},TIZEN_VERSION=${TIZEN_VERSION}

@@ -22,5 +22,5 @@ jobs:
         with:
           registry: localhost:5000
           repository: temp/workflow
-          tags: v3.7-5.5-abcd
+          build_args: STUDIO_VERSION=3.7,TIZEN_VERSION=5.5
 
