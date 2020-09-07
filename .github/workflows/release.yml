@@ -35,6 +35,7 @@ jobs:
           registry: localhost:5000
           repository: temp/workflow
           tags: foo
+          push: false
           build_args: STUDIO_VERSION=${{ needs.prepare_env.outputs.studio_version }},TIZEN_VERSION=${{ needs.prepare_env.outputs.tizen_version }}
 
       - name: Run image from registry
