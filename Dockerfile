@@ -114,5 +114,13 @@ RUN \
     && git clone git://git.tizen.org/platform/core/security/hash-signer -b tizen
 
 # Set PATH
-ENV PATH $PATH:$INSTALL_PATH/tools/ide/bin/:$INSTALL_PATH/package-manager/:$HOME/sdk-build/
+ENV PATH $PATH:$INSTALL_PATH/tools/ide/bin:$INSTALL_PATH/package-manager/:$HOME/sdk-build/
 
+# Define default platform-level certification
+RUN \
+    tizen \
+    security-profiles add -n platform_level \
+    -a ~/hash-signer/certificates/tizen_author.p12 \
+    -p tizenauthor \
+    -d ~/hash-signer/certificates/tizen-distributor-partner-manufacturer-signer.p12 \
+    -dp tizenpkcs12passfordsigner
